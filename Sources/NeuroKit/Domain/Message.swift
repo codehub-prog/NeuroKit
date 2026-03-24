@@ -20,8 +20,8 @@ public struct Message: Codable, Hashable {
     public let content: String
 }
 
-struct ChatMessage: Identifiable, Hashable {
-    let id = UUID()
-    var text: String
-    let isUser: Bool
+public struct ChatMessage: Identifiable, Hashable {
+    public let id = UUID()
+    public var text: String
+    public let isUser: Bool
 }
