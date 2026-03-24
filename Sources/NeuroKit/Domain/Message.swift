@@ -15,13 +15,7 @@ struct Choice: Codable {
     let message: Message
 }
 
-public struct Message: Codable, Hashable {
+public struct Message: Codable, Hashable, Sendable {
     public let role: Role
     public let content: String
-}
-
-public struct ChatMessage: Identifiable, Hashable {
-    public let id = UUID()
-    public var text: String
-    public let isUser: Bool
 }

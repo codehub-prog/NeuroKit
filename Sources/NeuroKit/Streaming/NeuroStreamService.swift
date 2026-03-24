@@ -7,50 +7,18 @@
 
 import Foundation
 
-final class NeuroStreamService {
+final class NeuroStreamService: Sendable {
     
-    private let apiKeyProvider: APIKeyProvider
+    private let apiKey: String
     private let model: String
     
-    init(model: String, apiKeyProvider: APIKeyProvider) {
+    init(model: String, apiKey: String) {
         self.model = model
-        self.apiKeyProvider = apiKeyProvider
-    }
-    
-    func send(messages: [Message]) async throws -> String {
-        
-        let apiKey = apiKeyProvider.getAPIKey()
-        
-        let url = URL(string: "https://api.openai.com/v1/chat/completions")!
-        
-        var request = URLRequest(url: url)
-        request.httpMethod = "POST"
-        request.addValue("Bearer \(apiKey)", forHTTPHeaderField: "Authorization")
-        request.addValue("application/json", forHTTPHeaderField: "Content-Type")
-        
-        let body: [String: Any] = [
-            "model": model,
-            "messages": messages.map {
-                ["role": $0.role.rawValue, "content": $0.content]
-            }
-        ]
-        
-        request.httpBody = try JSONSerialization.data(withJSONObject: body)
-        
-        let (data, response) = try await URLSession.shared.data(for: request)
-        
-        guard (response as? HTTPURLResponse)?.statusCode == 200 else {
-            throw URLError(.badServerResponse)
-        }
-        
-        let decoded = try JSONDecoder().decode(OpenAIResponse.self, from: data)
-        
-        return decoded.choices.first?.message.content ?? ""
+        self.apiKey = apiKey
     }
     
     @MainActor func stream(messages: [Message]) -> AsyncThrowingStream<String, Error> {
         
-        let apiKey = apiKeyProvider.getAPIKey()
         let model = self.model
         
         return AsyncThrowingStream { continuation in

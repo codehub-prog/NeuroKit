@@ -7,9 +7,9 @@
 
 import Foundation
 
-final class HTTPClient {
+final class HTTPClient: Sendable {
     
-    func send(request: URLRequest) async throws -> Data {
+    @MainActor func send(request: URLRequest) async throws -> Data {
         let (data, response) = try await URLSession.shared.data(for: request)
         
         guard let http = response as? HTTPURLResponse,

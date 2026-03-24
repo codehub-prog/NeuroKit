@@ -7,7 +7,7 @@
 
 import Foundation
 
-public enum Role: String, Codable {
+public enum Role: String, Codable, Sendable {
     case system
     case user
     case assistant

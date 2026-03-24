@@ -7,24 +7,24 @@
 
 import Foundation
 
-final class NeuroService {
+final class NeuroService: Sendable {
     
     private let model: String
-    private let apiKeyProvider: APIKeyProvider
+    private let apiKey: String
     private let client = HTTPClient()
     
-    init(model: String, apiKeyProvider: APIKeyProvider) {
+    init(model: String, apiKey: String) {
         self.model = model
-        self.apiKeyProvider = apiKeyProvider
+        self.apiKey = apiKey
     }
     
-    func send(messages: [Message]) async throws -> String {
+    @MainActor func send(messages: [Message]) async throws -> String {
         
         let url = URL(string: "https://api.openai.com/v1/chat/completions")!
         
         var request = URLRequest(url: url)
         request.httpMethod = "POST"
-        request.addValue("Bearer \(apiKeyProvider.getAPIKey())", forHTTPHeaderField: "Authorization")
+        request.addValue("Bearer \(apiKey)", forHTTPHeaderField: "Authorization")
         request.addValue("application/json", forHTTPHeaderField: "Content-Type")
         
         let body: [String: Any] = [
