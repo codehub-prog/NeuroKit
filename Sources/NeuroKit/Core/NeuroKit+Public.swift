@@ -9,7 +9,7 @@ import Foundation
 
 public extension NeuroKit {
     
-    func send(_ text: String) async throws -> String {
+    @MainActor func send(_ text: String) async throws -> String {
         messages.append(Message(role: .user, content: text))
         
         let reply = try await streamService.send(messages: messages)

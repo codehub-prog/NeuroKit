@@ -19,3 +19,9 @@ public struct Message: Codable, Hashable {
     public let role: Role
     public let content: String
 }
+
+struct ChatMessage: Identifiable, Hashable {
+    let id = UUID()
+    var text: String
+    let isUser: Bool
+}
